@@ -35,8 +35,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleMusicStore.Sorting", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleMusicStore.Auth", "SimpleMusicStore.Microservices\SimpleMusicStore.Auth\SimpleMusicStore.Auth.csproj", "{7BF25A73-ABA1-4C81-809B-10FFBFB11085}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{CC4C456B-010E-4590-9096-5BC18B085EB0}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,10 +93,6 @@ Global
 		{7BF25A73-ABA1-4C81-809B-10FFBFB11085}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7BF25A73-ABA1-4C81-809B-10FFBFB11085}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7BF25A73-ABA1-4C81-809B-10FFBFB11085}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CC4C456B-010E-4590-9096-5BC18B085EB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CC4C456B-010E-4590-9096-5BC18B085EB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CC4C456B-010E-4590-9096-5BC18B085EB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CC4C456B-010E-4590-9096-5BC18B085EB0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -116,7 +110,6 @@ Global
 		{6169B9AC-6E5D-4F8A-8626-8CD4604DB893} = {E56DC430-6C2F-4AC6-9511-CB598E5BEBDB}
 		{4915D086-C1A7-4308-8527-83225F8A2B78} = {E56DC430-6C2F-4AC6-9511-CB598E5BEBDB}
 		{7BF25A73-ABA1-4C81-809B-10FFBFB11085} = {B04C6C1B-C252-4AFB-8E8C-B8C486515B42}
-		{CC4C456B-010E-4590-9096-5BC18B085EB0} = {B04C6C1B-C252-4AFB-8E8C-B8C486515B42}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CFEFBA5E-B8B3-453B-8DAE-D12C5872773C}
