@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UserSecretsId>5f018cf0-7a22-4b42-9375-b719b8e888c9</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="EasyNetQ" Version="3.7.1" />
+    <PackageReference Include="Google.Apis.Auth" Version="1.42.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SimpleMusicStore.DAL\SimpleMusicStore.Repositories\SimpleMusicStore.Repositories.csproj" />
+    <ProjectReference Include="..\..\SimpleMusicStore.Libraries\SimpleMusicStore.Contracts\SimpleMusicStore.Contracts.csproj" />
+    <ProjectReference Include="..\..\SimpleMusicStore.Libraries\SimpleMusicStore.JwtAuthConfiguration\SimpleMusicStore.JwtAuthConfiguration.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

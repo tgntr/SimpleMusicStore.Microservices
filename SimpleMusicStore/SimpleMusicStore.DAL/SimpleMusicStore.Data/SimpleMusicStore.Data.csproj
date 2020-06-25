@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SimpleMusicStore.Libraries\SimpleMusicStore.Contracts\SimpleMusicStore.Contracts.csproj" />
+    <ProjectReference Include="..\SimpleMusicStore.Entities\SimpleMusicStore.Entities.csproj" />
+  </ItemGroup>
+
+</Project>
