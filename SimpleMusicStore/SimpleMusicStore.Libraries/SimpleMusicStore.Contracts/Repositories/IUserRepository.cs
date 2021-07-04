@@ -10,7 +10,7 @@ namespace SimpleMusicStore.Contracts.Repositories
     public interface IUserRepository : IRepository
     {
         Task<bool> Exists(string email);
-        ValueTask<EntityEntry<User>> Add(UserClaims user);
+        ValueTask<EntityEntry<SimpleUser>> Add(UserClaims user);
         Task<UserDetails> Find(int id);
         Task<UserClaims> Find(string email);
         IEnumerable<SubscriberDetails> Subscribers();

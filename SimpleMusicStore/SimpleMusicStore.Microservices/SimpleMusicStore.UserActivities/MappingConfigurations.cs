@@ -63,8 +63,8 @@ namespace SimpleMusicStore.UserActivities
             //CreateMap<NewOrder, Order>();
             //CreateMap<NewAddress, Address>();
             //CreateMap<AddressEdit, Address>();
-            CreateMap<User, UserDetails>();
-            CreateMap<User, SubscriberDetails>()
+            CreateMap<SimpleUser, UserDetails>();
+            CreateMap<SimpleUser, SubscriberDetails>()
                 .ForMember(s => s.FollowedArtists, src => src.MapFrom(u => u.FollowedArtists.Select(fa => fa.ArtistId)))
                 .ForMember(s => s.FollowedLabels, src => src.MapFrom(u => u.FollowedLabels.Select(fa => fa.LabelId)));
             //CreateMap<Record, SearchResult>()

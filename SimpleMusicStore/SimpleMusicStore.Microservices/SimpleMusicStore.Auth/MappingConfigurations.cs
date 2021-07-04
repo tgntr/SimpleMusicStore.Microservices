@@ -14,7 +14,7 @@ namespace SimpleMusicStore.UserActivities
     {
         public MappingConfigurations()
         {
-            CreateMap<User, UserClaims>().ReverseMap();
+            CreateMap<SimpleUser, UserClaims>().ReverseMap();
         }
     }
 }

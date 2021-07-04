@@ -9,7 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using SimpleMusicStore.Contracts.Auth;
 using SimpleMusicStore.Contracts.Repositories;
-using SimpleMusicStore.Data;
+using SimpleMusicStore.User.Data;
 using SimpleMusicStore.JwtAuthConfiguration;
 using SimpleMusicStore.Repositories;
 using System;
@@ -30,7 +30,7 @@ namespace SimpleMusicStore.Auth
         {
             services.AddControllers();
             services.Configure<JwtConfiguration>(JwtPayload());
-            services.AddDatabase("Server=.;Database=SimpleMusicStore;Trusted_Connection=True;");
+            services.AddUserDatabase("Server=.;Database=SimpleMusicStore;Trusted_Connection=True;");
             services.AddSingleton<IBus>(RabbitHutch.CreateBus("host=rabbitmq;virtualHost=/;username=rabbitmq;password=rabbitmq"));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<AuthenticationHandler, JwtAuthenticator>();
@@ -57,7 +57,7 @@ namespace SimpleMusicStore.Auth
 
             appLifetime.ApplicationStarted.Register(() =>
             {
-                //ApplyMigrations(app);
+                //TODO ApplyMigrations(app);
 
                 app.ApplicationServices.CreateScope().ServiceProvider.GetRequiredService<MessageListener>().ListenForMessages();
             });
@@ -72,7 +72,7 @@ namespace SimpleMusicStore.Auth
         {
             using (IServiceScope serviceScope = app.ApplicationServices.CreateScope())
             {
-                using (SimpleMusicStoreDbContext db = serviceScope.ServiceProvider.GetRequiredService<SimpleMusicStoreDbContext>())
+                using (var db = serviceScope.ServiceProvider.GetRequiredService<SimpleMusicStoreUserDataContext>())
                 {
                     if (db.Database.EnsureCreated())
                     {

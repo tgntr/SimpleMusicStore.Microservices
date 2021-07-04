@@ -14,7 +14,7 @@
     <ProjectReference Include="..\..\SimpleMusicStore.Libraries\SimpleMusicStore.Contracts\SimpleMusicStore.Contracts.csproj" />
     <ProjectReference Include="..\..\SimpleMusicStore.Libraries\SimpleMusicStore.Models\SimpleMusicStore.Models.csproj" />
     <ProjectReference Include="..\..\SimpleMusicStore.Libraries\SimpleMusicStore.Sorting\SimpleMusicStore.Sorting.csproj" />
-    <ProjectReference Include="..\SimpleMusicStore.Data\SimpleMusicStore.Data.csproj" />
+    <ProjectReference Include="..\SimpleMusicStore.User.Data\SimpleMusicStore.User.Data.csproj" />
   </ItemGroup>
 
 </Project>

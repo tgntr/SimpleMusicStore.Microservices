@@ -1,15 +1,15 @@
 ﻿cd "..\"
 
 ## General variables ##
-$bcProjectFullRootPath = get-location
+$simpleMusicStoreProjectsFullRootPath = get-location
 
-$webApiProjectFileFullPath = join-path $bcProjectFullRootPath ".\SimpleMusicStore\SimpleMusicStore.Api\SimpleMusicStore.Api.csproj"
-$webApiBuildFullPath = join-path $bcProjectFullRootPath "\Docker\api\bin"
+$webApiProjectFileFullPath = join-path $simpleMusicStoreProjectsFullRootPath ".\SimpleMusicStore\SimpleMusicStore.Api\SimpleMusicStore.Api.csproj"
+$webApiBuildFullPath = join-path $simpleMusicStoreProjectsFullRootPath "\Docker\api\bin"
 
-$microservicesFullRootPath = join-path $bcProjectFullRootPath ".\SimpleMusicStore\SimpleMusicStore.Microservices"
-$microservicesBuildGeneralFullPath = join-path $bcProjectFullRootPath "\Docker\ms"
+$microservicesFullRootPath = join-path $simpleMusicStoreProjectsFullRootPath ".\SimpleMusicStore\SimpleMusicStore.Microservices"
+$microservicesBuildGeneralFullPath = join-path $simpleMusicStoreProjectsFullRootPath "\Docker\ms"
 
-$dockerComposeFileFullPath = join-path $bcProjectFullRootPath "\Docker\"
+$dockerComposeFileFullPath = join-path $simpleMusicStoreProjectsFullRootPath "\Docker\"
 
 ## Public WebApi Build ##
 dotnet publish $webApiProjectFileFullPath --self-contained -r linux-x64 -o $webApiBuildFullPath

@@ -3,7 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SimpleMusicStore.Constants;
 using SimpleMusicStore.Contracts.Repositories;
-using SimpleMusicStore.Data;
+using SimpleMusicStore.User.Data;
+
 using SimpleMusicStore.Entities;
 using SimpleMusicStore.Models;
 using SimpleMusicStore.Models.View;
@@ -14,37 +15,44 @@ using System.Threading.Tasks;
 
 namespace SimpleMusicStore.Repositories
 {
-    public class UserRepository : DbRepository<User>, IUserRepository
+    public class UserRepository : IUserRepository
     {
-        public UserRepository(SimpleMusicStoreDbContext db, IMapper mapper)
-            :base(db, mapper)
+        private SimpleMusicStoreUserDataContext _db;
+        private readonly IMapper _mapper;
+
+        public UserRepository(SimpleMusicStoreUserDataContext db, IMapper mapper)
         {
+            _db = db;
+            _mapper = mapper;
         }
-        
+        public Task SaveChanges()
+        {
+            return _db.SaveChangesAsync();
+        }
         public async Task<UserDetails> Find(int id)
         {
-            var user = await _set.FindAsync(id);
+            var user = await _db.Users.FindAsync(id);
             ValidateThatUserExists(user);
             return _mapper.Map<UserDetails>(user);
         }
 
         public async Task<UserClaims> Find(string email)
         {
-            var user = await _set.FirstOrDefaultAsync(u => u.Email == email);
+            var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
             ValidateThatUserExists(user);
             return _mapper.Map<UserClaims>(user);
         }
 
-        public ValueTask<EntityEntry<User>> Add(UserClaims newUser)
+        public ValueTask<EntityEntry<SimpleUser>> Add(UserClaims newUser)
         {
-            var user = _mapper.Map<User>(newUser);
+            var user = _mapper.Map<SimpleUser>(newUser);
             AssignToRole(user);
-            return _set.AddAsync(user);
+            return _db.Users.AddAsync(user);
         }
 
-        private void AssignToRole(User user)
+        private void AssignToRole(SimpleUser user)
         {
-            if (_set.Any())
+            if (_db.Users.Any())
             {
                 user.Role = Roles.USER;
             }
@@ -56,15 +64,15 @@ namespace SimpleMusicStore.Repositories
 
         public Task<bool> Exists(string email)
         {
-            return _set.AnyAsync(u => u.Email == email);
+            return _db.Users.AnyAsync(u => u.Email == email);
         }
 
         public IEnumerable<SubscriberDetails> Subscribers()
         {
-            return _set.Where(u => u.IsSubscribed).Select(_mapper.Map<SubscriberDetails>);
+            return _db.Users.Where(u => u.IsSubscribed).Select(_mapper.Map<SubscriberDetails>);
         }
 
-        private void ValidateThatUserExists(User user)
+        private void ValidateThatUserExists(SimpleUser user)
         {
             if (user == null)
                 throw new ArgumentException(ErrorMessages.INVALID_USER);

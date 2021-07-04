@@ -1,17 +1,6 @@
-﻿using AutoMapper;
-using EasyNetQ;
-using Microsoft.Extensions.DependencyInjection;
-using SimpleMusicStore.Contracts;
+﻿using EasyNetQ;
 using SimpleMusicStore.Contracts.Auth;
-using SimpleMusicStore.Contracts.Repositories;
-using SimpleMusicStore.Data;
 using SimpleMusicStore.Models.MessageBus;
-using SimpleMusicStore.Models.View;
-using SimpleMusicStore.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SimpleMusicStore.Auth
 {
