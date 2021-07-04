@@ -33,9 +33,7 @@ namespace SimpleMusicStore.Auth
             await AddNewUser(tokenDetails);
 
             var user = await _users.Find(tokenDetails.Email);
-            var userClaims = GenerateClaims(user);
-
-            return _config.GenerateJwtToken(userClaims);
+            return _config.GenerateJwtToken(user);
         }
 
         private async Task AddNewUser(Payload tokenDetails)
@@ -46,17 +44,6 @@ namespace SimpleMusicStore.Auth
                 await _users.Add(newUser);
                 await _users.SaveChanges();
             }
-        }
-
-        private IEnumerable<Claim> GenerateClaims(UserClaims user)
-        {
-            return new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Name),
-                new Claim(ClaimTypes.Role, user.Role),
-                new Claim(ClaimTypes.Email, user.Email)
-            };
         }
 
         private async Task<Payload> GetGoogleToken(string token)

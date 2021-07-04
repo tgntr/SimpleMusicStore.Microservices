@@ -1,5 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using SimpleMusicStore.Models;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -55,9 +56,9 @@ namespace SimpleMusicStore.JwtAuthConfiguration
 
 		private SigningCredentials SigningCredentials => new SigningCredentials(SigningKey, SecurityAlgorithms.HmacSha256);
 
-		public string GenerateJwtToken(IEnumerable<Claim> claims)
+		public string GenerateJwtToken(UserClaims user)
 		{
-			var token = SecurityToken(claims);
+			var token = SecurityToken(user);
 			return new JwtSecurityTokenHandler().WriteToken(token);
 		}
 
@@ -80,16 +81,27 @@ namespace SimpleMusicStore.JwtAuthConfiguration
 			};
 		}
 
-		private SecurityToken SecurityToken(IEnumerable<Claim> claims)
+		private SecurityToken SecurityToken(UserClaims user)
 		{
 			return new JwtSecurityToken(
 				issuer: Issuer,
 				audience: Audience,
-				claims: claims,
+				claims: GenerateClaims(user),
 				notBefore: NotBefore,
 				expires: ExpirationDate,
 				signingCredentials: SigningCredentials
 			);
+		}
+
+		private IEnumerable<Claim> GenerateClaims(UserClaims user)
+		{
+			return new List<Claim>
+			{
+				new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+				new Claim(ClaimTypes.Name, user.Name),
+				new Claim(ClaimTypes.Role, user.Role),
+				new Claim(ClaimTypes.Email, user.Email)
+			};
 		}
 	}
 }
