@@ -5,6 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="AddressRepository.cs" />
+    <Compile Remove="ArtistFollowRepository.cs" />
+    <Compile Remove="ArtistRepository.cs" />
+    <Compile Remove="CommentRepository.cs" />
+    <Compile Remove="LabelFollowRepository.cs" />
+    <Compile Remove="LabelRepository.cs" />
+    <Compile Remove="OrderRepository.cs" />
+    <Compile Remove="RecordRepository.cs" />
+    <Compile Remove="StockRepository.cs" />
+    <Compile Remove="WishRepository.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="9.0.0" />
     <PackageReference Include="PagedList" Version="1.17.0" />
   </ItemGroup>

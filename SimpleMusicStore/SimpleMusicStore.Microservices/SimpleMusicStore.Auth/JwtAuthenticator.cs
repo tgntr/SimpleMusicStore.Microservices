@@ -3,14 +3,15 @@ using Microsoft.Extensions.Options;
 using SimpleMusicStore.Constants;
 using SimpleMusicStore.Contracts.Auth;
 using SimpleMusicStore.Contracts.Repositories;
+using SimpleMusicStore.Entities;
 using SimpleMusicStore.JwtAuthConfiguration;
-using SimpleMusicStore.JwtAuthConfiguration.Extensions;
 using SimpleMusicStore.Models;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using static Google.Apis.Auth.GoogleJsonWebSignature;
 
 namespace SimpleMusicStore.Auth
 {
@@ -21,28 +22,30 @@ namespace SimpleMusicStore.Auth
 
         public JwtAuthenticator(IUserRepository users)
         {
+            //TODO temp, JwtConfiguration should be injected
             _config = new JwtConfiguration();
-            _config.Secret = "SimpleMusicStoreAuthorizationSecret";
-            _config.Issuer = "SimpleMusicStore";
-            _config.Audience = "SimpleMusicStore";
-
             _users = users;
         }
 
         public async Task<string> Google(string token)
         {
-            var userInfo = await GoogleJsonWebSignature.ValidateAsync(token);
-            ValidateToken(userInfo);
+            var tokenDetails = await GetGoogleToken(token);
+            await AddNewUser(tokenDetails);
 
-            if (!await _users.Exists(userInfo.Email))
+            var user = await _users.Find(tokenDetails.Email);
+            var userClaims = GenerateClaims(user);
+
+            return _config.GenerateJwtToken(userClaims);
+        }
+
+        private async Task AddNewUser(Payload tokenDetails)
+        {
+            if (!await _users.Exists(tokenDetails.Email))
             {
-                await _users.Add(new UserClaims(userInfo.Name, userInfo.Email));
+                var newUser = new UserClaims(tokenDetails.Name, tokenDetails.Email);
+                await _users.Add(newUser);
                 await _users.SaveChanges();
             }
-
-            var user = await _users.Find(userInfo.Email);
-
-            return GenerateJwtToken(GenerateClaims(user));
         }
 
         private IEnumerable<Claim> GenerateClaims(UserClaims user)
@@ -56,18 +59,15 @@ namespace SimpleMusicStore.Auth
             };
         }
 
-        private static void ValidateToken(GoogleJsonWebSignature.Payload userInfo)
+        private async Task<Payload> GetGoogleToken(string token)
         {
+            var userInfo = await GoogleJsonWebSignature.ValidateAsync(token);
             if (userInfo == null)
             {
                 throw new ArgumentException(ErrorMessages.INVALID_TOKEN);
             }
-        }
 
-        private string GenerateJwtToken(IEnumerable<Claim> claims)
-        {
-            var token = _config.SecurityToken(claims);
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return userInfo;
         }
     }
 }

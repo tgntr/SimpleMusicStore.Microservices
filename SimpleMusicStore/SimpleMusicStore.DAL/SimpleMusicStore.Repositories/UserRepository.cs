@@ -25,10 +25,7 @@ namespace SimpleMusicStore.Repositories
             _db = db;
             _mapper = mapper;
         }
-        public Task SaveChanges()
-        {
-            return _db.SaveChangesAsync();
-        }
+      
         public async Task<UserDetails> Find(int id)
         {
             var user = await _db.Users.FindAsync(id);
@@ -70,6 +67,11 @@ namespace SimpleMusicStore.Repositories
         public IEnumerable<SubscriberDetails> Subscribers()
         {
             return _db.Users.Where(u => u.IsSubscribed).Select(_mapper.Map<SubscriberDetails>);
+        }
+
+        public Task SaveChanges()
+        {
+            return _db.SaveChangesAsync();
         }
 
         private void ValidateThatUserExists(SimpleUser user)

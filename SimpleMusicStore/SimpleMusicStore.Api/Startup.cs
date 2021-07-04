@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SimpleMusicStore.Contracts.Auth;
-using SimpleMusicStore.JwtAuthConfiguration.Extensions;
+using SimpleMusicStore.JwtAuthConfiguration;
 using System;
 
 namespace SimpleMusicStore.Api
