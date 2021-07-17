@@ -34,7 +34,7 @@ services:
     hostname: "simplemusicstore.auth"
     depends_on:
       - rabbitmq
-      - simplemusicstore.users.data
+      - simplemusicstore.user.data
     labels:
       NAME: "simplemusicstore.auth"
     ports:
@@ -42,9 +42,9 @@ services:
     command: "dotnet /app/SimpleMusicStore.Auth.dll"
    
     
-  simplemusicstore.users.data:
-    image: "mcr.microsoft.com/mssql/server:2017-latest"
-    hostname: "simplemusicstore.users.data"
+  simplemusicstore.user.data:
+    image: "mcr.microsoft.com/mssql/server:2019-CU11-ubuntu-20.04"
+    hostname: "simplemusicstore.user.data"
     ports:
       - "1433:1433"
     environment:

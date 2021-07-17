@@ -3,13 +3,9 @@ using Microsoft.Extensions.Options;
 using SimpleMusicStore.Constants;
 using SimpleMusicStore.Contracts.Auth;
 using SimpleMusicStore.Contracts.Repositories;
-using SimpleMusicStore.Entities;
 using SimpleMusicStore.JwtAuthConfiguration;
 using SimpleMusicStore.Models;
 using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using static Google.Apis.Auth.GoogleJsonWebSignature;
 
@@ -20,9 +16,10 @@ namespace SimpleMusicStore.Auth
         private readonly JwtConfiguration _config;
         private readonly IUserRepository _users;
 
-        public JwtAuthenticator(IUserRepository users, JwtConfiguration config)
+        public JwtAuthenticator(IUserRepository users, IOptions<JwtConfiguration> config)
+        { 
             _users = users;
-            _config = config;
+            _config = config.Value;
         }
 
         public async Task<string> Google(string token)

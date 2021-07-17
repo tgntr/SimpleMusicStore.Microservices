@@ -23,19 +23,18 @@ namespace SimpleMusicStore.JwtAuthConfiguration
 			JTI = "Jti";
 
 		private const int DEFAULT_DURATION = 300;
-		//TODO proper configuration in appsettings
 		//TODO should this class be in Models or Auth project?
         [JsonProperty(SECRET)]
-        public string Secret { private get; set; } = "SimpleMusicStoreAuthorizationSecret";
+        public string Secret { private get; set; }
 
 		[JsonProperty(ISSUER)]
-		public string Issuer { private get; set; } = "SimpleMusicStore";
+		public string Issuer { private get; set; }
 
 		[JsonProperty(SUBJECT)]
 		public string Subject { private get; set; }
 
 		[JsonProperty(AUDIENCE)]
-        public string Audience { private get; set; } = "SimpleMusicStore";
+        public string Audience { private get; set; }
 
 		[JsonProperty(EXPIRATION)]
 		public int Expiration { private get; set; } = DEFAULT_DURATION;

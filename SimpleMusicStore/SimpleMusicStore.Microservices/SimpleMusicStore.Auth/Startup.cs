@@ -30,7 +30,7 @@ namespace SimpleMusicStore.Auth
         {
             services.AddControllers();
             services.Configure<JwtConfiguration>(JwtPayload());
-            services.AddDatabase(DbConnectionString());
+            services.AddUserDatabase(DbConnectionString());
             services.AddSingleton<IBus>(RabbitHutch.CreateBus(RabbitMQConnectionString()));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<AuthenticationHandler, DevAuthenticator>();
