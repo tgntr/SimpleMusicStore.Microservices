@@ -1,0 +1,54 @@
+---
+version: '3.5'
+services:
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    hostname: "rabbitmq"
+    environment:
+      - RABBITMQ_DEFAULT_HOSTNAME=rabbitmq
+      - RABBITMQ_ERLANG_COOKIE=SWQOKODSQALRPCLNMEQG
+      - RABBITMQ_DEFAULT_USER=rabbitmq
+      - RABBITMQ_DEFAULT_PASS=rabbitmq
+      - RABBITMQ_DEFAULT_VHOST=/
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    labels:
+      NAME: "rabbitmq"
+      
+  simplemusicstore.api:
+    build: 
+        context: ./
+        dockerfile: ./SimpleMusicStore.Api/Dockerfile
+    hostname: "simplemusicstore.api"
+    depends_on:
+      - rabbitmq
+    labels:
+      NAME: "simplemusicstore.api"
+    ports:
+      - "8881:80"
+    command: "dotnet /app/SimpleMusicStore.Api.dll"
+    
+  simplemusicstore.auth:
+    build: 
+        context: ./
+        dockerfile: ./SimpleMusicStore.Microservices/SimplemusicStore.Auth/Dockerfile
+    hostname: "simplemusicstore.auth"
+    depends_on:
+      - rabbitmq
+      - simplemusicstore.user.data
+    labels:
+      NAME: "simplemusicstore.auth"
+    ports:
+      - "8882:80"
+    command: "dotnet /app/SimpleMusicStore.Auth.dll"
+   
+    
+  simplemusicstore.user.data:
+    image: "mcr.microsoft.com/mssql/server:2019-CU11-ubuntu-20.04"
+    hostname: "simplemusicstore.user.data"
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "Simplemusicst0re"
+      ACCEPT_EULA: "Y"
