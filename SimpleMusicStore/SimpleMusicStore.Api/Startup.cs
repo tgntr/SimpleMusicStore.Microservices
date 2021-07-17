@@ -25,7 +25,7 @@ namespace SimpleMusicStore.Api
         {
             services.AddControllers();
             services.AddJwtAuthentication(JwtPayload());
-            services.AddSingleton<IBus>(RabbitHutch.CreateBus("host=rabbitmq;virtualHost=/;username=rabbitmq;password=rabbitmq"));
+            services.AddSingleton<IBus>(RabbitHutch.CreateBus(RabbitMQConnectionString()));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IClaimAccessor, CurrentUserClaimsAccessor>();
         }
