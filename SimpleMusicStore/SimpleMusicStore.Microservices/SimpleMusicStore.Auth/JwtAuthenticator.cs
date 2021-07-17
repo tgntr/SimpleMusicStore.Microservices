@@ -19,14 +19,10 @@ namespace SimpleMusicStore.Auth
         private readonly JwtConfiguration _config;
         private readonly IUserRepository _users;
 
-        public JwtAuthenticator(IUserRepository users)
+        public JwtAuthenticator(IUserRepository users, JwtConfiguration config)
         {
-            _config = new JwtConfiguration();
-            _config.Secret = "SimpleMusicStoreAuthorizationSecret";
-            _config.Issuer = "SimpleMusicStore";
-            _config.Audience = "SimpleMusicStore";
-
             _users = users;
+            _config = config;
         }
 
         public async Task<string> Google(string token)
