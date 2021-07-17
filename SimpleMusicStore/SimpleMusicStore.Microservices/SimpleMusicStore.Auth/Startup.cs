@@ -30,8 +30,8 @@ namespace SimpleMusicStore.Auth
         {
             services.AddControllers();
             services.Configure<JwtConfiguration>(JwtPayload());
-            services.AddDatabase("Server=.;Database=SimpleMusicStore;Trusted_Connection=True;");
-            services.AddSingleton<IBus>(RabbitHutch.CreateBus("host=rabbitmq;virtualHost=/;username=rabbitmq;password=rabbitmq"));
+            services.AddDatabase(DbConnectionString());
+            services.AddSingleton<IBus>(RabbitHutch.CreateBus(RabbitMQConnectionString()));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<AuthenticationHandler, JwtAuthenticator>();
             services.AddTransient<MessageListener>();
@@ -57,7 +57,7 @@ namespace SimpleMusicStore.Auth
 
             appLifetime.ApplicationStarted.Register(() =>
             {
-                //ApplyMigrations(app);
+                ApplyMigrations(app);
 
                 app.ApplicationServices.CreateScope().ServiceProvider.GetRequiredService<MessageListener>().ListenForMessages();
             });
