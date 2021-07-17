@@ -17,46 +17,49 @@ services:
       NAME: "rabbitmq"
       
   simplemusicstore.api:
-    image: "mcr.microsoft.com/dotnet/core/runtime:3.0"
+    #image: "mcr.microsoft.com/dotnet/core/runtime:3.0"
+    build: ../simplemusicstore
     hostname: "simplemusicstore.api"
     depends_on:
       - rabbitmq
       - simplemusicstore.db
     labels:
       NAME: "simplemusicstore.api"
-    volumes:
-      - "./api/bin:/app"
+    #volumes:
+    #  - "./api/bin:/app"
     ports:
       - "8881:80"
     command: "dotnet /app/SimpleMusicStore.Api.dll"
     
   simplemusicstore.auth:
-    image: "mcr.microsoft.com/dotnet/core/sdk:3.0"
+    build: 
+        context: ../simplemusicstore
+        dockerfile: ./SimpleMusicStore.Microservices/SimplemusicStore.Auth/Dockerfile
     hostname: "simplemusicstore.auth"
     depends_on:
       - rabbitmq
       - simplemusicstore.db
     labels:
       NAME: "simplemusicstore.auth"
-    volumes:
-      - "./ms/SimpleMusicStore.Auth/bin:/app"
+    #volumes:
+    #  - "./ms/SimpleMusicStore.Auth/bin:/app"
     ports:
       - "8882:80"
     command: "dotnet /app/SimpleMusicStore.Auth.dll"
     
-  simplemusicstore.useractivities:
-    image: "mcr.microsoft.com/dotnet/core/runtime:3.0"
-    hostname: "simplemusicstore.useractivities"
-    depends_on:
-      - rabbitmq
-      - simplemusicstore.db
-    labels:
-      NAME: "simplemusicstore.useractivities"
-    volumes:
-      - "./ms/SimpleMusicStore.UserActivities/bin:/app"
-    ports:
-      - "8883:80"
-    command: "dotnet /app/SimpleMusicStore.UserActivities.dll"
+  #simplemusicstore.useractivities:
+  #  image: "mcr.microsoft.com/dotnet/core/runtime:3.0"
+  #  hostname: "simplemusicstore.useractivities"
+  #  depends_on:
+  #    - rabbitmq
+  #    - simplemusicstore.db
+  #  labels:
+  #    NAME: "simplemusicstore.useractivities"
+  #  volumes:
+  #    - "./ms/SimpleMusicStore.UserActivities/bin:/app"
+  #  ports:
+  #    - "8883:80"
+  #  command: "dotnet /app/SimpleMusicStore.UserActivities.dll"
     
   simplemusicstore.db:
     image: "mcr.microsoft.com/mssql/server:2017-latest"
