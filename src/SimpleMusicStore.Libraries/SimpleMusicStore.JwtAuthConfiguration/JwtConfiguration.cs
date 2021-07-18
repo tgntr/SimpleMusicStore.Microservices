@@ -12,95 +12,105 @@ namespace SimpleMusicStore.JwtAuthConfiguration
     [JsonObject("JwtPayload")]
     public class JwtConfiguration
     {
-		public const string
-			SECRET = "Secret",
-			ISSUER = "Issuer",
-			SUBJECT = "Subject",
-			AUDIENCE = "Audience",
-			EXPIRATION = "Expiration",
-			NOT_BEFORE = "NotBefore",
-			ISSUED_AT = "IssuedAt",
-			JTI = "Jti";
+        private const int DEFAULT_DURATION = 300;
+        private const string
+            SECRET = "Secret",
+            ISSUER = "Issuer",
+            SUBJECT = "Subject",
+            AUDIENCE = "Audience",
+            EXPIRATION = "Expiration",
+            NOT_BEFORE = "NotBefore",
+            ISSUED_AT = "IssuedAt",
+            JTI = "Jti";
+        
+        public JwtConfiguration()
+        {
+            Expiration = DEFAULT_DURATION;
+            NotBefore = DateTime.UtcNow;
+            IssuedAt = DateTime.UtcNow;
+            Jti = Guid.NewGuid().ToString();
+        }
 
-		private const int DEFAULT_DURATION = 300;
-		//TODO should this class be in Models or Auth project?
         [JsonProperty(SECRET)]
-        public string Secret { private get; set; }
+        public string Secret { internal get; set; }
 
-		[JsonProperty(ISSUER)]
-		public string Issuer { private get; set; }
+        [JsonProperty(ISSUER)]
+        public string Issuer { internal get; set; }
 
-		[JsonProperty(SUBJECT)]
-		public string Subject { private get; set; }
+        [JsonProperty(SUBJECT)]
+        public string Subject { internal get; set; }
 
-		[JsonProperty(AUDIENCE)]
-        public string Audience { private get; set; }
+        [JsonProperty(AUDIENCE)]
+        public string Audience { internal get; set; }
 
-		[JsonProperty(EXPIRATION)]
-		public int Expiration { private get; set; } = DEFAULT_DURATION;
+        [JsonProperty(EXPIRATION)]
+        public int Expiration { internal get; set; }
 
-		[JsonProperty(NOT_BEFORE)]
-		private DateTime NotBefore => DateTime.UtcNow;
+        [JsonProperty(NOT_BEFORE)]
+        public DateTime NotBefore { internal get; set; }
 
 		//TODO maybe DateTime.UtcNow is repeating too much in the whole project
-		[JsonProperty(ISSUED_AT)]
-		private DateTime IssuedAt => DateTime.UtcNow;
+        [JsonProperty(ISSUED_AT)]
+        public DateTime IssuedAt { internal get; set; }
 
-		[JsonProperty(JTI)]
-		private string Jti => Guid.NewGuid().ToString();
+        [JsonProperty(JTI)]
+        public string Jti { internal get; set; }
 
-		private DateTime ExpirationDate => IssuedAt.AddMinutes(Expiration);
+        public string GenerateJwtToken(UserClaims user)
+        {
+            var token = GetSecurityToken(user);
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
 
-		private SymmetricSecurityKey SigningKey => new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secret));
+        public TokenValidationParameters GetValidationParameters()
+        {
+            return new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = Issuer,
 
-		private SigningCredentials SigningCredentials => new SigningCredentials(SigningKey, SecurityAlgorithms.HmacSha256);
+                ValidateAudience = true,
+                ValidAudience = Audience,
 
-		public string GenerateJwtToken(UserClaims user)
-		{
-			var token = SecurityToken(user);
-			return new JwtSecurityTokenHandler().WriteToken(token);
-		}
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = GetSigningKey(),
 
-		public TokenValidationParameters ValidationParameters()
-		{
-			return new TokenValidationParameters
-			{
-				ValidateIssuer = true,
-				ValidIssuer = Issuer,
+                RequireExpirationTime = false,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero
+            };
+        }
 
-				ValidateAudience = true,
-				ValidAudience = Audience,
+        private SecurityToken GetSecurityToken(UserClaims user)
+        {
+            return new JwtSecurityToken(
+                issuer: Issuer,
+                audience: Audience,
+                claims: GenerateClaims(user),
+                notBefore: NotBefore,
+                expires: CalculateExpirationDate(),
+                signingCredentials: EncriptSigningKey()
+            );
+        }
 
-				ValidateIssuerSigningKey = true,
-				IssuerSigningKey = SigningKey,
+        private IEnumerable<Claim> GenerateClaims(UserClaims user)
+        {
+            return new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Name),
+                new Claim(ClaimTypes.Role, user.Role),
+                new Claim(ClaimTypes.Email, user.Email)
+            };
+        }
 
-				RequireExpirationTime = false,
-				ValidateLifetime = true,
-				ClockSkew = TimeSpan.Zero
-			};
-		}
+        private DateTime CalculateExpirationDate() => 
+            IssuedAt.AddMinutes(Expiration);
 
-		private SecurityToken SecurityToken(UserClaims user)
-		{
-			return new JwtSecurityToken(
-				issuer: Issuer,
-				audience: Audience,
-				claims: GenerateClaims(user),
-				notBefore: NotBefore,
-				expires: ExpirationDate,
-				signingCredentials: SigningCredentials
-			);
-		}
+        private SymmetricSecurityKey GetSigningKey() =>
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secret));
 
-		private IEnumerable<Claim> GenerateClaims(UserClaims user)
-		{
-			return new List<Claim>
-			{
-				new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-				new Claim(ClaimTypes.Name, user.Name),
-				new Claim(ClaimTypes.Role, user.Role),
-				new Claim(ClaimTypes.Email, user.Email)
-			};
-		}
-	}
+        private SigningCredentials EncriptSigningKey() =>
+            new SigningCredentials(GetSigningKey(), SecurityAlgorithms.HmacSha256);
+    }
 }

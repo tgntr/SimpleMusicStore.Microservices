@@ -64,7 +64,7 @@ namespace SimpleMusicStore.Api
             });
         }
 
-        private IConfigurationSection JwtPayload() => Configuration.GetSection("JwtPayload");
+        private JwtConfiguration JwtPayload() => Configuration.GetSection("JwtPayload").Get<JwtConfiguration>();
         private string RabbitMQConnectionString() => Configuration["RabbitMQ:Connection"];
     }
 }

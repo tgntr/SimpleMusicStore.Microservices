@@ -6,7 +6,7 @@ namespace SimpleMusicStore.JwtAuthConfiguration
 {
     public static class JwtSetup
     {
-        public static void AddJwtAuthentication(this IServiceCollection services, IConfigurationSection config)
+        public static void AddJwtAuthentication(this IServiceCollection services, JwtConfiguration config)
         {
             services.AddAuthentication(options =>
             {
@@ -17,11 +17,8 @@ namespace SimpleMusicStore.JwtAuthConfiguration
                 {
                     options.RequireHttpsMetadata = false;
                     options.SaveToken = true;
-                    options.TokenValidationParameters = config.JwtConfiguration().ValidationParameters();
+                    options.TokenValidationParameters = config.GetValidationParameters();
                 });
         }
-
-        private static JwtConfiguration JwtConfiguration(this IConfigurationSection config)
-            => config.Get<JwtConfiguration>();
     }
 }
